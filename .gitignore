@@ -8,4 +8,5 @@ temp_converted/
 *.tmp
 .DS_Store
 Thumbs.db
+.firebase/
 
