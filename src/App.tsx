@@ -183,27 +183,90 @@ export const App: React.FC = () => {
         return false;
       }
 
-      // 5. Omnibox Tokens Search (Sub-50ms)
+      // 5. Omnibox Tokens Search (Sub-50ms) com Normalização Alfanumérica (CAL 05 <-> CAL05)
       if (qTokens.length > 0) {
-        const pSearch = (
-          `${p.name} ${p.boxNumber} ${p.commercialCode} ${p.referenceCode} ${p.marconCode || ''} ${p.julijacCode || ''} ${p.diameterMm} ${p.position} ${p.vehicleApplication} ${p.description} ${p.brand}`
-        ).toLowerCase();
+        // Decompõe e normaliza tokens para suportar formas unidas ou espaçadas (ex: 'CAL05' <-> 'CAL 05')
+        const tokenMatchers = qTokens.map((t) => {
+          const clean = t.replace(/[^a-z0-9]/g, '');
+          const letterDigit = clean.match(/^([a-z]+)(\d+.*)$/);
+          const digitLetter = clean.match(/^(\d+)([a-z]+.*)$/);
 
-        // Verifica também nas variantes de calota se há match de caixa, código ou medida
+          const subParts: string[] = [];
+          if (letterDigit) {
+            subParts.push(letterDigit[1], letterDigit[2]);
+          } else if (digitLetter) {
+            subParts.push(digitLetter[1], digitLetter[2]);
+          }
+
+          return {
+            raw: t,
+            clean,
+            subParts,
+          };
+        });
+
+        // 1. Textos da variante
         const variantMatches = (p.variants || []).some((v) => {
-          const vText = `${v.diameterMm} ${v.commercialCode} ${v.boxNumber}`.toLowerCase();
-          return qTokens.every((token) => vText.includes(token));
+          const vText = `${v.diameterMm} ${v.commercialCode} ${v.boxNumber} cx${v.boxNumber} caixa${v.boxNumber}`.toLowerCase();
+          const codeCompact = (v.commercialCode || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+          const diaCompact = (v.diameterMm || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
+          return tokenMatchers.every((m) => {
+            // Match direto
+            if (vText.includes(m.raw)) return true;
+
+            // Match no código compacto (ex: 'cal05' bate com 'cal 05' cuja versão compacta é 'cal05')
+            if (m.clean && (codeCompact.includes(m.clean) || diaCompact.includes(m.clean))) return true;
+
+            // Match decomposto (ex: se o usuário digitou 'cal05', 'cal' e '05' estão presentes na variante)
+            if (m.subParts.length > 1 && m.subParts.every((sp) => vText.includes(sp))) return true;
+
+            return false;
+          });
         });
 
         if (!variantMatches) {
-          const allTokensMatch = qTokens.every((token) => {
-            // Suporta buscar 'cx 93' ou 'cx93' ou apenas '93'
-            if (token.startsWith('cx') && token.length > 2) {
-              const numPart = token.slice(2);
-              return p.boxNumber.toLowerCase() === numPart;
+          // 2. Produto principal
+          const pSearch = (
+            `${p.name} ${p.boxNumber} cx${p.boxNumber} caixa${p.boxNumber} ${p.commercialCode} ${p.referenceCode} ${p.marconCode || ''} ${p.julijacCode || ''} ${p.diameterMm} ${p.position} ${p.vehicleApplication} ${p.description} ${p.brand}`
+          ).toLowerCase();
+
+          // Códigos compactos específicos do produto (sem concatenar números entre campos distintos)
+          const pCodeCompacts = [
+            p.commercialCode,
+            p.referenceCode,
+            p.marconCode,
+            p.julijacCode,
+            p.diameterMm,
+          ]
+            .filter(Boolean)
+            .map((c) => (c || '').toLowerCase().replace(/[^a-z0-9]/g, ''));
+
+          const allTokensMatch = tokenMatchers.every((m) => {
+            // Suporte a 'cx93', 'cx 93', 'caixa93', 'caixa 93'
+            if (m.clean.startsWith('cx') && m.clean.length > 2) {
+              const numPart = m.clean.slice(2);
+              if (p.boxNumber.toLowerCase() === numPart) return true;
+              if ((p.variants || []).some((v) => v.boxNumber.toLowerCase() === numPart)) return true;
             }
-            return pSearch.includes(token);
+            if (m.clean.startsWith('caixa') && m.clean.length > 5) {
+              const numPart = m.clean.slice(5);
+              if (p.boxNumber.toLowerCase() === numPart) return true;
+              if ((p.variants || []).some((v) => v.boxNumber.toLowerCase() === numPart)) return true;
+            }
+
+            // Match direto no texto
+            if (pSearch.includes(m.raw)) return true;
+
+            // Match nos códigos compactos do produto (ex: 'marcon10442')
+            if (m.clean && pCodeCompacts.some((c) => c.includes(m.clean))) return true;
+
+            // Match decomposto (ex: 'cal05' bate se pSearch contiver 'cal' e '05')
+            if (m.subParts.length > 1 && m.subParts.every((sp) => pSearch.includes(sp))) return true;
+
+            return false;
           });
+
           if (!allTokensMatch) return false;
         }
       }
