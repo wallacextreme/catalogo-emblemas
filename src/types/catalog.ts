@@ -56,3 +56,4 @@ export interface BackupData {
   products: EmblemProduct[];
   sha256: string;
 }
+

@@ -69,3 +69,4 @@ export const OmniboxSearch: React.FC<OmniboxSearchProps> = ({
     </div>
   );
 };
+

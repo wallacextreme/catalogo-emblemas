@@ -6,7 +6,7 @@
  */
 
 import { EmblemProduct, BackupData } from '../types/catalog';
-import { computeSha256Hex } from '../media/webp-converter';
+import { computeSha256Hex } from '../utils/sha256';
 
 const DB_NAME = 'emblemas_counter_db';
 const DB_VERSION = 1;
@@ -275,3 +275,4 @@ export async function resetDatabase(): Promise<void> {
     req.onerror = () => reject(req.error);
   });
 }
+

@@ -92,3 +92,4 @@ export const MuralGrid: React.FC<MuralGridProps> = ({
     </div>
   );
 };
+

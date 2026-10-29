@@ -75,3 +75,4 @@ describe('Gate 7 & 9 — Motor de Busca Omnibox Especializado em Emblemas', () =
     expect(avgPerSearch).toBeLessThan(10); // Muito abaixo do limite de 50ms!
   });
 });
+

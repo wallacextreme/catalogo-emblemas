@@ -42,14 +42,8 @@ class ObjectUrlManagerRegistry {
 
 export const ObjectUrlManager = new ObjectUrlManagerRegistry();
 
-/**
- * Converte um ArrayBuffer para string hexadecimal SHA-256 via Web Crypto API.
- */
-export async function computeSha256Hex(buffer: ArrayBuffer): Promise<string> {
-  const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('').toUpperCase();
-}
+import { computeSha256Hex } from '../utils/sha256';
+export { computeSha256Hex };
 
 /**
  * Carrega um Blob ou File em um HTMLImageElement para manipulação em Canvas.

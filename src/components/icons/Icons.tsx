@@ -205,3 +205,4 @@ export const CameraIcon: React.FC<IconProps> = ({ size = 20, className = '', ...
     <circle cx="12" cy="13" r="3" />
   </svg>
 );
+

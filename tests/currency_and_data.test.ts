@@ -94,3 +94,4 @@ describe('Gate 7 & 8 — Precisão Monetária (BigInt/Centavos) & Isolamento de 
     expect(sanitized).not.toContain('<img');
   });
 });
+

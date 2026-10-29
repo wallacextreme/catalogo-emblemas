@@ -222,3 +222,4 @@ export const QuickFilters: React.FC<QuickFiltersProps> = ({
     </div>
   );
 };
+

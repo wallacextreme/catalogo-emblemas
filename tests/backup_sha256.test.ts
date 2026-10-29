@@ -76,3 +76,4 @@ describe('Gate 9 — Backup, Restauração & Integridade Criptográfica SHA-256'
     expect(verifySha).not.toBe(backup.sha256);
   });
 });
+
