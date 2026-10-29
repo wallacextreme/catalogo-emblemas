@@ -1,0 +1,10 @@
+node_modules/
+dist/
+target/
+temp_converted/
+.playwright_scrape_cache.json
+~$*
+~WRL*
+*.tmp
+.DS_Store
+Thumbs.db

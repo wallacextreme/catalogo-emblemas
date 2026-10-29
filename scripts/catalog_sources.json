@@ -1,0 +1,35 @@
+{
+  "marcon": {
+    "baseUrl": "https://www.marconemblemas.com.br",
+    "directPatterns": [
+      "https://www.marconemblemas.com.br/produto/{slug}",
+      "https://www.marconemblemas.com.br/emblema/{slug}"
+    ],
+    "searchUrls": [
+      "https://www.marconemblemas.com.br/?s={sku}",
+      "https://www.marconemblemas.com.br/busca?q={sku}"
+    ],
+    "catalogHome": "https://www.marconemblemas.com.br"
+  },
+  "julijac": {
+    "baseUrl": "http://www.julijac.com.br",
+    "directPatterns": [
+      "http://www.julijac.com.br/loja/images/{sku}.jpg",
+      "http://www.julijac.com.br/produto/{slug}"
+    ],
+    "searchUrls": [
+      "http://www.julijac.com.br/busca?q={sku}"
+    ],
+    "catalogHome": "http://www.julijac.com.br"
+  },
+  "shekparts": {
+    "baseUrl": "https://www.shekparts.com.br",
+    "directPatterns": [
+      "https://www.shekparts.com.br/produtos/{slug}"
+    ],
+    "searchUrls": [
+      "https://www.shekparts.com.br/?s={sku}"
+    ],
+    "catalogHome": "https://www.shekparts.com.br"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Catálogo Inteligente de Balcão — Emblemas Automotivos",
+  "short_name": "Emblemas Balcão",
+  "description": "Catálogo interno de balcão para emblemas automotivos e calotas offline-first",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8FAFC",
+  "theme_color": "#1D4ED8",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

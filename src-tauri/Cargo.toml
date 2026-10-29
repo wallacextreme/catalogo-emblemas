@@ -1,0 +1,14 @@
+[package]
+name = "catalogo-emblemas"
+version = "1.0.0"
+description = "Catálogo Inteligente de Balcão para Emblemas Automotivos"
+authors = ["Antigravity"]
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2.0.0", features = [] }
+
+[dependencies]
+tauri = { version = "2.0.0", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
